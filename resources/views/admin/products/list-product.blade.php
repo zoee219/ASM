@@ -2,64 +2,60 @@
 
 @section('title')
     @parent
-    Danh sách sản phẩm
+    Danh sách sản phẩm Admin
 @endsection
 
 @push('styles')
-    <style>
-        .img-product {
-            width: 20px;
-            height: 20px;
-            object-fit: cover; /* Đảm bảo ảnh không bị méo */
-            border-radius: 5px; /* Bo góc cho ảnh nếu cần */
-        }
-      
-        
-    </style>
+<style>
+    .imgPr{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
+</style>
 @endpush
 
 @section('content')
-<div class="p-4 bg-light" style="min-height: 800px;">
+<!-- Main -->
+<div class="p-4" style="min-height: 800px;">
     @if(session('message'))
-        <div class="alert alert-primary" role="alert">
-            {{ session('message') }}
-        </div>
+        <p class="text-danger">{{ session('message') }}</p>
     @endif
-    <h4 class="text-Secondary mb-4">Danh sách tài khoản</h4>
-    <a href="{{ route('admin.products.addProduct') }}" class="btn btn-success">Thêm mới</a>
+    <h4 class="text-primary mb-4">Danh sách sản phẩm</h4>
+    <a href="{{ route('admin.products.addProduct') }}" class="btn btn-info">Thêm mới</a>
     <table class="table mt-3">
         <thead>
             <tr>
                 <th scope="col">STT</th>
-                <th scope="col">Tên tài khoản</th>
+                <th scope="col">Tên sản phẩm</th>
                 <th scope="col">Mô tả</th>
-                <th scope="col">Giá</th>
+                <th scope="col">Giá sản phẩm</th>
                 <th scope="col">Ảnh</th>
                 <th scope="col">Hành động</th>
             </tr>
         </thead>
         <tbody>
             @foreach($listProduct as $key => $value)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $value->name }}</td>
-                    <td>{{ $value->description }}</td>
-                    <td>{{ $value->price }}</td>
-                    <td>
-                        <img class="img-product" src="{{ asset($value->image) }}" alt="">
-                    </td>
-                    <td>
-                        <a href="{{ route('admin.products.detailProduct', $value->product_id) }}" class="btn btn-info">Chi tiết</a>
-                        <a href="{{ route('admin.products.updateProduct', $value->product_id) }}" class="btn btn-warning">Sửa</a>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="{{ $value->product_id }}">Xóa</button>
-                    </td>
-                </tr>
-            @endforeach
+            <tr>
+                <td>{{ $key + 1 }}</td>
+                <td>{{ $value->name }}</td>
+                <td>{{ $value->description }}</td>
+                <td>{{ $value->price }}</td>
+                <td>
+                    <img class="imgPr" src="{{ asset($value->image) }}" alt="">
+                    
+                </td>
+                <td>
+                    <a href="{{ route('admin.products.detailProduct', $value->product_id) }}" class="btn btn-info">Chi tiết</a>
+                    <a href="{{ route('admin.products.updateProduct', $value->product_id) }}" class="btn btn-warning">Sửa</a>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-id="{{ $value->product_id  }}">Xóa</button>
+                </td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
     {{ $listProduct->links('pagination::bootstrap-5') }}
-</div> 
-
+</div>
 <!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -81,7 +77,9 @@
             </form>
         </div>
     </div>
-</div> 
+</div>
+
+
 @endsection
 
 @push('scripts')
@@ -92,8 +90,14 @@
             var button = event.relatedTarget;
             var id = button.getAttribute('data-bs-id');
             
+            console.log('Button ID:', id); // Kiểm tra ID có đúng không
+            
             let formDelete = document.getElementById('formDelete');
+            console.log('Form Action Before:', formDelete.getAttribute('action')); // Kiểm tra URL trước khi thay đổi
+            
             formDelete.setAttribute('action', '{{ route("admin.products.deleteProduct") }}?idproduct=' + id);
+            
+            console.log('Form Action After:', formDelete.getAttribute('action')); // Kiểm tra URL sau khi thay đổi
         });
     });
 </script>

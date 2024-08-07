@@ -2,9 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\CheckAdminMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-
+use App\Http\Middleware\CheckAdminMiddleware;
 
 class Kernel extends HttpKernel
 {

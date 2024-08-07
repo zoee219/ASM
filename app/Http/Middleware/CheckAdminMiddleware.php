@@ -9,11 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckAdminMiddleware
 {
- 
+    
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check() && Auth::user()->role == '2'){
-            return $next($request);
+        if(Auth::check()){
+            if(Auth::user()->role == '1'){
+                return $next($request);
+            }else{
+                // Điều hướng sang user
+                return redirect()->route('user.products.listProductUser')->with([
+                    'message' => 'Chào mừng User đã đăng nhập'
+                ]);
+            }
         }else{
             return redirect()->route('login')->with([
                 'message' => 'Bạn phải đăng nhập trước'

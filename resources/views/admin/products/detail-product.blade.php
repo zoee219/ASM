@@ -8,8 +8,8 @@
 @push('styles')
     <style>
         .img-product{
-            width: 20px;
-            height: 20px;
+            width: 50px;
+            height: 50px;
             object-fit: cover;
         }
     </style>
@@ -33,7 +33,7 @@
             Ảnh sản phẩm:
             <img src="{{ asset($product->image) }}" alt="" class="img-product">
         </p>
-        <a href="{{ route('admin.products.listProduct') }}" class="btn btn-info mt-3">Quay lại</a>
+        <a href="{{ route('admin.products.listProductAdmin') }}" class="btn btn-info mt-3">Quay lại</a>
     </div>
 @endsection
 

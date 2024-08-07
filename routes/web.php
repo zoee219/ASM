@@ -1,124 +1,72 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\AuthController;
-
-Route::get('login', [AuthController::class, 'login'])->name('login');
-Route::post('post-login', [AuthController::class, 'postLogin'])->name('postLogin');
-Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('register', [AuthController::class, 'register'])->name('register');
-Route::post('post-register', [AuthController::class, 'postRegister'])->name('postRegister');
+use App\Http\Controllers\Admin\ProductControllerAdmin;
+use App\Http\Controllers\User\ControllerUser;
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\Admin\CategoryController;
 
 
-// method http
-// GET, POST, PUT, PATCH, DELETE
 
-// base url: http://127.0.0.1:8000/
-
-// http://127.0.0.1:8000/test
-// Route::get('/test', [UserController::class, 'test']);
-
-Route::get('/', function(){
-    echo 'Trang chủ';
+Route::get('/', function () {
+    return view('welcome');
 });
 
+Route::get('login', [AuthenticationController::class, 'login'])->name('login');
+Route::post('post-login', [AuthenticationController::class, 'postLogin'])->name('postLogin');
+Route::get('logout', [AuthenticationController::class, 'logout'])->name('logout');
+Route::get('register', [AuthenticationController::class, 'register'])->name('register');
+Route::post('post-register', [AuthenticationController::class, 'postRegister'])->name('postRegister');
 
-// // // điều hướng qua action của controller
-// // // php artisan make:controller TênController
-// // Route::get('list-product', [ProductController::class, 'showProduct']);
+// sản phẩm admin
+Route::group([
+    'prefix' => 'admin',
+    'as' => 'admin.',
+    'middleware' => 'checkAdmin'
+], function(){
 
-// // // slug vs params
-// // // http://127.0.0.1:8000/list-product/1/iphone (slug)
-// // Route::get('get-product/{id}', [ProductController::class, 'getProduct']);
+    Route::group([
+        'prefix' => 'products',
+        'as' => 'products.'
+    ], function(){
+        Route::get('/', [ProductControllerAdmin::class, 'listProductAdmin'])->name('listProductAdmin');
+        Route::get('add-product', [ProductControllerAdmin::class, 'addProduct'])->name('addProduct');
+        Route::post('add-product', [ProductControllerAdmin::class, 'addPostProduct'])->name('addPostProduct');
+        Route::delete('delete-product', [ProductControllerAdmin::class, 'deleteProduct'])->name('deleteProduct');
+        Route::get('detail-product/{idProduct}', [ProductControllerAdmin::class, 'detailProduct'])->name('detailProduct');
+        Route::get('update-product/{idProduct}', [ProductControllerAdmin::class, 'updateProduct'])->name('updateProduct');
+        Route::patch('update-product/{idProduct}', [ProductControllerAdmin::class, 'updatePatchProduct'])->name('updatePatchProduct');
+    });
+});
 
+// thể loại sản phẩm admin
+Route::group([
+    'prefix' => 'admin',
+    'as' => 'admin.',
+    'middleware' => 'checkAdmin'
+], function(){
+    Route::group([
+        'prefix' => 'categories',
+        'as' => 'categories.'
+    ], function(){
+        Route::get('/', [CategoryController::class, 'listCategoryAdmin'])->name('listCategoryAdmin');
+        Route::get('add-category', [CategoryController::class, 'addCategory'])->name('addCategory');
+        Route::post('add-category', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+        Route::delete('delete-category', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+        Route::get('update-category/{idCategory}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+        Route::patch('update-category/{idCategory}', [CategoryController::class, 'updatePatchCategory'])->name('updatePatchCategory');
+    });
+});
 
-
-// // // http://127.0.0.1:8000/list-product?id=1&name=iphone (params)
-// // Route::get('update-product', [ProductController::class, 'updateProduct'] );
-
-// Route::get('thong-tin-sinh-vien', [TenSinhVienController::class, 'tensinhvien']);
-
-// // CRUD => query builder
-// // http://127.0.0.1:8000/users/add-user
-// // http://127.0.0.1:8000/users/update-user
-// Route::group([
-//     'prefix' => 'users',
-//     'as' => 'users.'
-// ], function() {
-//     // http://127.0.0.1:8000/users/list-user
-//     Route::get('list-user', [UserController::class, 'listUsers'])
-//     ->name('listUsers');
-//     // http://127.0.0.1:8000/users/add-user
-//     Route::get('add-user', [UserController::class, 'addUsers'])
-//     ->name('addUsers');
-//     Route::post('add-user', [UserController::class, 'addPostUsers'])
-//     ->name('addPostUsers');
-//     // http://127.0.0.1:8000/users/delete-user/1
-//     Route::get('delete-user/{userID}', [UserController::class, 'deleteUser'])
-//     ->name('deleteUser');
-//     // http://127.0.0.1:8000/users/update-user/1
-//     Route::get('update-user/{userID}', [UserController::class, 'updateUser'])
-//     ->name('updateUser');
-//     Route::post('update-user', [UserController::class, 'updatePostUser'])
-//     ->name('updatePostUser');
-// });
-
-// Route::group([
-//     'prefix' => 'products',
-//     'as' => 'products.'
-// ], function() {
-//     Route::get('list-product', [ProductController::class, 'listProduct'])
-//     ->name('listProduct');
-//     Route::get('add-product', [ProductController::class, 'addProduct'])
-//     ->name('addProduct');
-//     Route::post('add-product', [ProductController::class, 'addPostProduct'])
-//     ->name('addPostProduct');
-//     Route::get('delete-product/{productID}', [ProductController::class, 'deleteProduct'])
-//     ->name('deleteProduct');
-//     Route::get('update-product/{productID}', [ProductController::class, 'updateProduct'])
-//     ->name('updateProduct');
-//     Route::post('update-product', [ProductController::class, 'updatePostProduct'])
-//     ->name('updatePostProduct');
-// });
-
-// Route::get('test', function() {
-//     return view('test')->with([
-//         'var1' => 'hello',
-//         'var2' => [
-//             'apple', 'orange', 'mango'
-//         ]
-//     ]);
-// });
-// Route::get('test2', function(){
-//     return view('admin.products.list-product');
-// });
-// Route::get('test3', function(){
-//     return view('admin.products.add-product');
-// });
-
-// http://127.0.0.1:8000/admin/products/
-// CRUD bảng product
-// Route -> Controller -> Model -> DB
-// Controller -> View  list, add, update, detail
-
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'checkAdmin' ],
-function(){
-    Route::group(['prefix' => 'products', 'as' => 'products.'], function(){
-        Route::get('/', [ProductController::class, 'listProduct'])
-        ->name('listProduct');
-        Route::get('add-product', [ProductController::class, 'addProduct'])
-        ->name('addProduct');
-        Route::post('add-product', [ProductController::class, 'addPostProduct'])
-        ->name('addPostProduct');
-        Route::delete('delete-product', [ProductController::class, 'deleteProduct'])
-        ->name('deleteProduct');
-        Route::get('detail-product/{idProduct}', [ProductController::class, 'detailProduct'])
-        ->name('detailProduct');
-        Route::get('update-product/{idProduct}', [ProductController::class, 'updateProduct'])
-        ->name('updateProduct');
-        Route::patch('update-product/{idProduct}', [ProductController::class, 'updatePatchProduct'])
-        ->name('updatePatchProduct');
+Route::group([
+    'prefix' => 'user',
+    'as' => 'user.'
+], function(){
+    Route::group([
+        'prefix' => 'products',
+        'as' => 'products.'
+    ], function(){
+        Route::get('/', [ControllerUser::class, 'listProductUser'])->name('listProductUser');
 
     });
 });

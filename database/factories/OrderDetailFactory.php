@@ -7,7 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrderDetail>
  */
 class OrderDetailFactory extends Factory
 {
@@ -23,8 +23,8 @@ class OrderDetailFactory extends Factory
             'updated_at' => $this->faker->dateTime,
             'quantity' => $this->faker->randomNumber,
             'price' => $this->faker->randomFloat(2, 1, 100),
-            'order_id' => Order::factory(),
-            'product_id' => Product::factory()
+            'order_id' => Order::all()->random()->order_id,
+            'product_id' => Product::all()->random()->product_id
         ];
     }
 }

@@ -67,6 +67,7 @@ class AuthenticationController extends Controller
                 'name' => $req->name,
                 'email' => $req->email,
                 'password' =>Hash::Make($req->password)
+                
             ];
             $newUser = User::create($data);
 
